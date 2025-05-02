@@ -4,6 +4,8 @@ from .models import Workout
 from .forms import WorkoutForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 #  Goal views
 @login_required
@@ -95,3 +97,16 @@ def dashboard(request):
     goals = Goal.objects.filter(user=request.user)
     workouts = Workout.objects.filter(user=request.user).order_by('-date')[:5]
     return render(request, 'dashboard.html', {'goals': goals, 'workouts': workouts})
+
+
+# User registration view
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Auto login after sign up
+            return redirect('dashboard')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
