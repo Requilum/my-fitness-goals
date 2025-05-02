@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+<h1>My Workouts</h1>
+<a href="{% url 'add_workout' %}" class="btn btn-primary">+ Add Workout</a>
+<ul>
+  {% for workout in workouts %}
+  <li>
+    {{ workout.activity_type }} on {{ workout.date }}
+    <a href="{% url 'workout_detail' workout.pk %}">View</a>
+  </li>
+  {% empty %}
+  <li>No workouts yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
