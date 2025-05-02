@@ -1,0 +1,23 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Dashboard</h1>
+
+<h3>Your Goals</h3>
+<ul>
+  {% for goal in goals %}
+  <li>
+    {{ goal.title }} - {% if goal.is_completed %}✅{% else %}🚧{% endif %}
+  </li>
+  {% empty %}
+  <li>No goals yet.</li>
+  {% endfor %}
+</ul>
+
+<h3>Recent Workouts</h3>
+<ul>
+  {% for workout in workouts %}
+  <li>{{ workout.activity_type }} on {{ workout.date }}</li>
+  {% empty %}
+  <li>No workouts yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

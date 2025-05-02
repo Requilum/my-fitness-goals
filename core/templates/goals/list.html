@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+<h1>My Goals</h1>
+<a href="{% url 'add_goal' %}" class="btn btn-primary">+ Add Goal</a>
+<ul>
+  {% for goal in goals %}
+  <li>
+    {{ goal.title }} - {{ goal.target }}
+    <a href="{% url 'edit_goal' goal.pk %}">Edit</a>
+    <form
+      method="post"
+      action="{% url 'delete_goal' goal.pk %}"
+      style="display: inline"
+    >
+      {% csrf_token %}
+      <button class="btn btn-sm btn-danger">Delete</button>
+    </form>
+  </li>
+  {% empty %}
+  <li>No goals yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

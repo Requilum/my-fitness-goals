@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block content %}
+<h1>{{ workout.activity_type }}</h1>
+<p><strong>Date:</strong> {{ workout.date }}</p>
+<p><strong>Duration:</strong> {{ workout.duration }} minutes</p>
+<p><strong>Notes:</strong> {{ workout.notes }}</p>
+
+<a href="{% url 'edit_workout' workout.pk %}" class="btn btn-warning">Edit</a>
+<form
+  method="post"
+  action="{% url 'delete_workout' workout.pk %}"
+  style="display: inline"
+>
+  {% csrf_token %}
+  <button class="btn btn-danger">Delete</button>
+</form>
+{% endblock %}
