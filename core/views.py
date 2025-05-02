@@ -88,3 +88,10 @@ def delete_workout(request, pk):
         workout.delete()
         return redirect('workouts')
     return render(request, 'workouts/detail.html', {'workout': workout, 'confirm_delete': True})
+
+# Dashboard view
+@login_required
+def dashboard(request):
+    goals = Goal.objects.filter(user=request.user)
+    workouts = Workout.objects.filter(user=request.user).order_by('-date')[:5]
+    return render(request, 'dashboard.html', {'goals': goals, 'workouts': workouts})
