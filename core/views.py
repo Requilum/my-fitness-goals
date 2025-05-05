@@ -61,27 +61,31 @@ def workout_detail(request, pk):
 @login_required
 def add_workout(request):
     if request.method == 'POST':
-        form = WorkoutForm(request.POST)
+        form = WorkoutForm(request.POST, user=request.user)
         if form.is_valid():
             workout = form.save(commit=False)
             workout.user = request.user
             workout.save()
             return redirect('workouts')
     else:
-        form = WorkoutForm()
+        form = WorkoutForm(user=request.user)
     return render(request, 'workouts/form.html', {'form': form, 'title': 'Add Workout'})
+
 
 @login_required
 def edit_workout(request, pk):
     workout = get_object_or_404(Workout, pk=pk, user=request.user)
+
     if request.method == 'POST':
-        form = WorkoutForm(request.POST, instance=workout)
+        form = WorkoutForm(request.POST, instance=workout, user=request.user)
         if form.is_valid():
             form.save()
             return redirect('workouts')
     else:
-        form = WorkoutForm(instance=workout)
+        form = WorkoutForm(instance=workout, user=request.user) 
+        
     return render(request, 'workouts/form.html', {'form': form, 'title': 'Edit Workout'})
+
 
 @login_required
 def delete_workout(request, pk):
@@ -105,8 +109,16 @@ def signup_view(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Auto login after sign up
+            login(request, user)
             return redirect('dashboard')
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+def register(request):
+    form = UserCreationForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('login')  # or dashboard
+    return render(request, 'registration/register.html', {'form': form})
